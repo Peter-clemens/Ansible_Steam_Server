@@ -1,0 +1,27 @@
+{
+    "builders": [{
+        "type": "docker",
+        "image": "centos:latest",
+        "commit": true,
+        "changes": [
+            "VOLUME /data",
+            "WORKDIR /data",
+            "EXPOSE 6379",
+            "ENTRYPOINT [\"docker-entrypoint.sh\"]",
+            "CMD [\"redis-server\"]"
+        ]
+    }],
+
+    "provisioners": [{
+        "type": "ansible",
+        "user": "root",
+        "playbook_file": "CreateHalfLifeServer.yml",
+        "extra_arguments": [ "-vv" ]
+    }],
+
+    "post-processors": [[ {
+        "type": "docker-tag",
+        "repository": "docker.io/peterclemens/halflife_server",
+        "tag": "latest"
+    } ]]
+}

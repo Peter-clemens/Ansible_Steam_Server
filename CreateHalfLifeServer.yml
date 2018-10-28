@@ -1,0 +1,36 @@
+---
+- name: Setup a Half Life server
+  hosts: all
+
+  vars:
+    steamcmd_create_user: true
+    halflife_dir: "/home/steam/server/hlds_l"   
+
+  tasks:
+  - name: Install sudo
+    yum:
+      name: sudo
+      state: latest
+
+  - name: Setup Steam CMD
+    import_role:
+      name: ansible-role-steamcmd
+  
+  - name: Create Half Life Dir
+    file:
+      path: "{{ halflife_dir }}"
+      state: directory
+      owner: "{{ steamcmd_user }}"
+      group: "{{ steamcmd_user }}"
+      mode: "0750"
+
+  - name: Set Install Dir
+    command: "{{ steamcmd_directory }}steamcmd.sh + force_install_dir {{ halflife_dir }} +quit"
+    async: "{{ steamcmd_login_timeout}}"
+    poll: 5
+  
+  - name: Install Half Life Server
+    command: "{{ steamcmd_directory }}steamcmd.sh + app_update 90 validate +quit"
+    async: "{{ steamcmd_login_timeout}}"
+    poll: 5
+  
