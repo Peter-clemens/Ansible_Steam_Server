@@ -1,0 +1,45 @@
+---
+- name: Setup a Half Life server
+  hosts: all
+  connection: local
+
+  vars:
+    steamcmd_create_user: true
+    halflife_dir: "/home/steam/Server"   
+    steamcmd_user: "steam"
+    steamcmd_directory: "/home/{{ steamcmd_user }}/cmd/"
+    steamcmd_login_timeout: "120"
+
+  tasks:
+  - name: Install sudo
+    package:
+      name: sudo
+      state: latest
+
+  - name: Setup Steam CMD
+    import_role:
+      name: ansible-role-steamcmd
+  
+  - name: Create Half Life Dir
+    file:
+      path: "{{ halflife_dir }}"
+      state: directory
+      owner: "{{ steamcmd_user }}"
+      group: "{{ steamcmd_user }}"
+      mode: "0750"
+
+  - name: Set Install Dir
+    command: "{{ steamcmd_directory }}steamcmd.sh +login anonymous +force_install_dir {{ halflife_dir }} +app_update 276060 validate +quit"
+    #    async: "{{ steamcmd_login_timeout}}"
+    poll: 5
+    register: output
+
+  - name: Show Log
+    debug:
+      var: output.stdout_lines
+
+    #  - name: Install Sven Coop Server
+    #command: "{{ steamcmd_directory }}steamcmd.sh + app_update 276060 validate +quit"
+    #async: "{{ steamcmd_login_timeout}}"
+    #poll: 5
+  

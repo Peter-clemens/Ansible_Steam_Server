@@ -4,6 +4,7 @@
 
   vars:
     steamcmd_create_user: true
+    steamcmd_user: "steam"
     halflife_dir: "/home/steam/server/hlds_l"   
 
   tasks:
