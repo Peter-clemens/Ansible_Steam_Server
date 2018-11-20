@@ -4,11 +4,8 @@
         "image": "centos:latest",
         "commit": true,
         "changes": [
-            "VOLUME /data",
-            "WORKDIR /data",
-            "EXPOSE 6379",
-            "ENTRYPOINT [\"docker-entrypoint.sh\"]",
-            "CMD [\"redis-server\"]"
+            "EXPOSE 27015",
+            "ENTRYPOINT [\"~/server/hlds_l/hlds_run -game valve +maxplayers 4 +map crossfire +exec server.cfg +port 27015\"]"
         ]
     }],
 
