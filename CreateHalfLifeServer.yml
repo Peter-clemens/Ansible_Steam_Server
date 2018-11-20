@@ -32,6 +32,7 @@
     command: "{{ steamcmd_directory }}steamcmd.sh +login anonymous +force_install_dir {{ halflife_dir }} +app_update 90 validate +quit"
     #    async: "{{ steamcmd_login_timeout}}"
     poll: 5
+    retries: 20
     register: output
 
   - name: Show Log
