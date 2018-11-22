@@ -11,10 +11,18 @@
     steamcmd_login_timeout: "120"
 
   tasks:
-  - name: Install sudo
+  - name: Add ability to install 32 bit packages
+    cmd: "dpkg --add-architecture i386"
+
+  - name: Install Needed Packages
     package:
       name: sudo
       state: latest
+    loop:
+      - "loop"
+      - "libstdc++6:i386"
+      - "libssl1.0.0:i386"
+      - "zlib1g:i386"
 
   - name: Setup Steam CMD
     import_role:
@@ -42,4 +50,3 @@
     #command: "{{ steamcmd_directory }}steamcmd.sh + app_update 276060 validate +quit"
     #async: "{{ steamcmd_login_timeout}}"
     #poll: 5
-  
